@@ -3,8 +3,8 @@ import openai
 import time
 
 # === ВСТАВ СВОЇ КЛЮЧІ ТУТ ===
-OPENAI_API_KEY = "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"
-ASSISTANT_ID = "asst_F42KLxklHD5m7uOitfOGjFDn"
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+ASSISTANT_ID = st.secrets["ASSISTANT_ID"]
 # ============================
 
 client = openai.Client(api_key=OPENAI_API_KEY)
