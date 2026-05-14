@@ -10,17 +10,15 @@ ASSISTANT_ID = st.secrets["ASSISTANT_ID"]
 client = openai.Client(api_key=OPENAI_API_KEY)
 
 st.set_page_config(page_title="База знань БП", page_icon="📚")
-
 # Приховуємо стандартні елементи інтерфейсу Streamlit (GitHub, меню, футер)
-    hide_ui_style = """
-    <style>
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    header {visibility: hidden !important;}
-    footer {visibility: hidden !important;}
-    </style>
-    """
-    st.markdown(hide_ui_style, unsafe_allow_html=True)
-
+hide_ui_style = """
+<style>
+[data-testid="stToolbar"] {visibility: hidden !important;}
+header {visibility: hidden !important;}
+footer {visibility: hidden !important;}
+</style>
+"""
+st.markdown(hide_ui_style, unsafe_allow_html=True)
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
