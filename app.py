@@ -10,9 +10,10 @@ ASSISTANT_ID = st.secrets["ASSISTANT_ID"]
 client = openai.Client(api_key=OPENAI_API_KEY)
 
 st.set_page_config(page_title="База знань БП", page_icon="📚", layout="wide")
+
 # Відображення логотипу
 st.image("logo.png", width=250)
-# Приховуємо стандартні елементи інтерфейсу Streamlit (GitHub, меню, футер)
+
 # Сучасний дизайн: приховування UI, тіні, картки та виразне поле вводу
 modern_css = """
 <style>
@@ -40,6 +41,7 @@ footer {visibility: hidden !important;}
 </style>
 """
 st.markdown(modern_css, unsafe_allow_html=True)
+
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -69,7 +71,8 @@ else:
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
-# --- ПОЧАТОК НОВОГО БЛОКУ: ЕКРАН ПРИВІТАННЯ ---
+
+    # --- ПОЧАТОК НОВОГО БЛОКУ: ЕКРАН ПРИВІТАННЯ ---
     if len(st.session_state.messages) == 0:
         st.markdown("### 👋 Вітаю в базі знань!")
         st.info("Я ваш корпоративний AI-асистент. Моя ціль — допомагати вам швидко знаходити потрібні інструкції та відповіді по наших бізнес-процесах.")
@@ -78,21 +81,22 @@ else:
         st.markdown("> *Як правильно оформити повернення товару від клієнта?*")
         st.markdown("> *Які документи потрібні для прийому телефону в сервісний центр?*")
         st.markdown("> *Який алгоритм дій при роботі з запереченнями?*")
-# --- КІНЕЦЬ НОВОГО БЛОКУ ---
-# Виведення історії повідомлень
+    # --- КІНЕЦЬ НОВОГО БЛОКУ ---
+
+    # Виведення історії повідомлень
     for msg in st.session_state.messages:
         # Визначаємо аватарку: логотип для бота, силует для людини
         avatar_img = "logo.png" if msg["role"] == "assistant" else "👤"
         with st.chat_message(msg["role"], avatar=avatar_img):
             st.markdown(msg["content"])
 
-    # ПОЛЕ ВВОДУ (має бути на одному рівні з "for", не всередині нього!)
+    # ПОЛЕ ВВОДУ
     if prompt := st.chat_input("Напишіть питання щодо бізнес-процесу..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user", avatar="👤"):
             st.markdown(prompt)
 
-        # Відправка запиту в OpenAI (відступи йдуть далі вправо)
+        # Відправка запиту в OpenAI
         client.beta.threads.messages.create(
             thread_id=st.session_state.thread_id,
             role="user",
@@ -111,16 +115,16 @@ else:
                     thread_id=st.session_state.thread_id,
                     run_id=run.id
                 )
+        
+        if run.status == 'completed':
+            messages = client.beta.threads.messages.list(
+                thread_id=st.session_state.thread_id
+            )
+            # Беремо останню відповідь
+            assistant_response = messages.data[0].content[0].text.value
             
-if run.status == 'completed':
-                messages = client.beta.threads.messages.list(
-                    thread_id=st.session_state.thread_id
-                )
-                # Беремо останню відповідь
-                assistant_response = messages.data[0].content[0].text.value
-                
-                st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-                with st.chat_message("assistant", avatar="logo.png"):
-                    st.markdown(assistant_response)
-            else:
-                st.error("Виникла помилка. Перевірте API ключі та баланс.")
+            st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+            with st.chat_message("assistant", avatar="logo.png"):
+                st.markdown(assistant_response)
+        else:
+            st.error("Виникла помилка. Перевірте API ключі та баланс.")
