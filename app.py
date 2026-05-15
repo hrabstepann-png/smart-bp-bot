@@ -11,16 +11,18 @@ client = openai.Client(api_key=OPENAI_API_KEY)
 
 st.set_page_config(page_title="База знань БП", page_icon="📚", layout="wide")
 
-# Відображення логотипу
-st.image("logo.png", width=200)
-
-# Сучасний дизайн: приховування UI, тіні, картки та виразне поле вводу
+# Сучасний дизайн: приховування UI, тіні, картки, виразне поле вводу та зменшення відступу зверху
 modern_css = """
 <style>
 /* Приховуємо стандартні елементи */
 [data-testid="stToolbar"] {visibility: hidden !important;}
 header {visibility: hidden !important;}
 footer {visibility: hidden !important;}
+
+/* Зменшуємо відступ зверху */
+.block-container {
+    padding-top: 2rem !important;
+}
 
 /* Робимо поле вводу виразнішим (заокруглення і тінь) */
 [data-testid="stChatInput"] {
@@ -57,8 +59,16 @@ if not st.session_state.authenticated:
         else:
             st.error("Доступ заборонено. Невірний email.")
 else:
-    st.title("📚 AI Консультант по БП")
-    st.caption(f"Ви увійшли як: {st.session_state.user_email}")
+    # Створюємо дві колонки (текст зліва, логотип справа)
+    col1, col2 = st.columns([4, 1])
+    
+    with col1:
+        st.title("📚 AI Консультант по БП")
+        st.caption(f"Ви увійшли як: {st.session_state.user_email}")
+        
+    with col2:
+        # Логотип тепер тут, у правій колонці
+        st.image("logo.png", width=180)
     
     if st.sidebar.button("Вийти"):
         st.session_state.authenticated = False
