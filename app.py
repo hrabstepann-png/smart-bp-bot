@@ -50,7 +50,16 @@ else:
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
-
+# --- ПОЧАТОК НОВОГО БЛОКУ: ЕКРАН ПРИВІТАННЯ ---
+    if len(st.session_state.messages) == 0:
+        st.markdown("### 👋 Вітаю в базі знань!")
+        st.info("Я ваш корпоративний AI-асистент. Моя ціль — допомагати вам швидко знаходити потрібні інструкції та відповіді по наших бізнес-процесах.")
+        
+        st.markdown("**💡 Приклади запитань, які ви можете мені поставити:**")
+        st.markdown("> *Як правильно оформити повернення товару від клієнта?*")
+        st.markdown("> *Які документи потрібні для прийому телефону в сервісний центр?*")
+        st.markdown("> *Який алгоритм дій при роботі з запереченнями?*")
+# --- КІНЕЦЬ НОВОГО БЛОКУ ---
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
