@@ -1,6 +1,7 @@
 import streamlit as st
 import openai
 import time
+import re  # Підключаємо бібліотеку для очищення тексту
 
 # === ВСТАВ СВОЇ КЛЮЧІ ТУТ ===
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
@@ -68,7 +69,7 @@ else:
         
     with col2:
         # Логотип тепер тут, у правій колонці
-        st.image("logo.png", width=220)
+        st.image("logo.png", width=180)
     
     if st.sidebar.button("Вийти"):
         st.session_state.authenticated = False
@@ -132,6 +133,9 @@ else:
             )
             # Беремо останню відповідь
             assistant_response = messages.data[0].content[0].text.value
+            
+            # ВИРІЗАЄМО ТЕХНІЧНІ СИМВОЛИ (Мітки джерел OpenAI)
+            assistant_response = re.sub(r'【.*?】', '', assistant_response)
             
             st.session_state.messages.append({"role": "assistant", "content": assistant_response})
             with st.chat_message("assistant", avatar="logo.png"):
