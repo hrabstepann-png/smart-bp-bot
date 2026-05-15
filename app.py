@@ -68,7 +68,7 @@ else:
         
     with col2:
         # Логотип тепер тут, у правій колонці
-        st.image("logo.png", width=180)
+        st.image("logo.png", width=220)
     
     if st.sidebar.button("Вийти"):
         st.session_state.authenticated = False
