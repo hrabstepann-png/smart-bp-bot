@@ -9,7 +9,7 @@ ASSISTANT_ID = st.secrets["ASSISTANT_ID"]
 
 client = openai.Client(api_key=OPENAI_API_KEY)
 
-st.set_page_config(page_title="База знань БП", page_icon="📚" layout="wide")
+st.set_page_config(page_title="База знань БП", page_icon="📚", layout="wide")
 # Відображення логотипу
 st.image("logo.png", width=250)
 # Приховуємо стандартні елементи інтерфейсу Streamlit (GitHub, меню, футер)
