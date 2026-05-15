@@ -57,7 +57,7 @@ if not st.session_state.authenticated:
         else:
             st.error("Доступ заборонено. Невірний email.")
 else:
-    st.title("📚 AI Консультант БП")
+    st.title("📚 AI Консультант по БП")
     st.caption(f"Ви увійшли як: {st.session_state.user_email}")
     
     if st.sidebar.button("Вийти"):
