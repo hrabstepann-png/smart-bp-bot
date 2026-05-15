@@ -112,8 +112,7 @@ else:
                     run_id=run.id
                 )
             
-            if run.status == 'completed':with st.chat_message("assistant", avatar="logo.png"):
-                    st.markdown(assistant_response)
+if run.status == 'completed':
                 messages = client.beta.threads.messages.list(
                     thread_id=st.session_state.thread_id
                 )
@@ -121,7 +120,7 @@ else:
                 assistant_response = messages.data[0].content[0].text.value
                 
                 st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-                with st.chat_message("assistant"):
+                with st.chat_message("assistant", avatar="logo.png"):
                     st.markdown(assistant_response)
             else:
                 st.error("Виникла помилка. Перевірте API ключі та баланс.")
