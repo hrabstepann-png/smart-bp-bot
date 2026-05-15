@@ -9,18 +9,37 @@ ASSISTANT_ID = st.secrets["ASSISTANT_ID"]
 
 client = openai.Client(api_key=OPENAI_API_KEY)
 
-st.set_page_config(page_title="База знань БП", page_icon="📚")
+st.set_page_config(page_title="База знань БП", page_icon="📚" layout="wide")
 # Відображення логотипу
 st.image("logo.png", width=250)
 # Приховуємо стандартні елементи інтерфейсу Streamlit (GitHub, меню, футер)
-hide_ui_style = """
+# Сучасний дизайн: приховування UI, тіні, картки та виразне поле вводу
+modern_css = """
 <style>
+/* Приховуємо стандартні елементи */
 [data-testid="stToolbar"] {visibility: hidden !important;}
 header {visibility: hidden !important;}
 footer {visibility: hidden !important;}
+
+/* Робимо поле вводу виразнішим (заокруглення і тінь) */
+[data-testid="stChatInput"] {
+    border: 2px solid #2196F3 !important;
+    border-radius: 15px !important;
+    box-shadow: 0px 8px 20px rgba(33, 150, 243, 0.15) !important;
+}
+
+/* Оформлюємо повідомлення як сучасні картки */
+[data-testid="stChatMessage"] {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    border: 1px solid #f0f2f6;
+}
 </style>
 """
-st.markdown(hide_ui_style, unsafe_allow_html=True)
+st.markdown(modern_css, unsafe_allow_html=True)
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -60,13 +79,15 @@ else:
         st.markdown("> *Які документи потрібні для прийому телефону в сервісний центр?*")
         st.markdown("> *Який алгоритм дій при роботі з запереченнями?*")
 # --- КІНЕЦЬ НОВОГО БЛОКУ ---
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
+for msg in st.session_state.messages:
+        # Визначаємо аватарку: логотип для бота, силует для людини
+        avatar_img = "logo.png" if msg["role"] == "assistant" else "👤"
+        with st.chat_message(msg["role"], avatar=avatar_img):
             st.markdown(msg["content"])
 
     if prompt := st.chat_input("Напишіть питання щодо бізнес-процесу..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
+with st.chat_message("user", avatar="👤"):
             st.markdown(prompt)
 
         # Відправка запиту в OpenAI
@@ -89,7 +110,8 @@ else:
                     run_id=run.id
                 )
             
-            if run.status == 'completed':
+            if run.status == 'completed':with st.chat_message("assistant", avatar="logo.png"):
+                    st.markdown(assistant_response)
                 messages = client.beta.threads.messages.list(
                     thread_id=st.session_state.thread_id
                 )
