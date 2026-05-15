@@ -79,18 +79,20 @@ else:
         st.markdown("> *Які документи потрібні для прийому телефону в сервісний центр?*")
         st.markdown("> *Який алгоритм дій при роботі з запереченнями?*")
 # --- КІНЕЦЬ НОВОГО БЛОКУ ---
-for msg in st.session_state.messages:
+# Виведення історії повідомлень
+    for msg in st.session_state.messages:
         # Визначаємо аватарку: логотип для бота, силует для людини
         avatar_img = "logo.png" if msg["role"] == "assistant" else "👤"
         with st.chat_message(msg["role"], avatar=avatar_img):
             st.markdown(msg["content"])
 
+    # ПОЛЕ ВВОДУ (має бути на одному рівні з "for", не всередині нього!)
     if prompt := st.chat_input("Напишіть питання щодо бізнес-процесу..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
-with st.chat_message("user", avatar="👤"):
+        with st.chat_message("user", avatar="👤"):
             st.markdown(prompt)
 
-        # Відправка запиту в OpenAI
+        # Відправка запиту в OpenAI (відступи йдуть далі вправо)
         client.beta.threads.messages.create(
             thread_id=st.session_state.thread_id,
             role="user",
