@@ -5,7 +5,7 @@ import re
 
 # === ВСТАВ СВОЇ ДАНІ СЮДИ ===
 TG_TOKEN = "8543702363:AAHoVTSOoMKEtakGeS7BBd-rg3C41jACKdY"
-OPENAI_API_KEY = "ВСТАВ_СВІЙ_OPENAI_API_KEY_ЯКИЙ_У_СЕЙФІ"
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 ASSISTANT_ID = "ВСТАВ_СВІЙ_ASSISTANT_ID"
 # ============================
 
